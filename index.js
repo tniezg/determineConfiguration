@@ -1,8 +1,14 @@
 var isNode = require('detect-node');
+var path = require('path');
 
 function determineConfiguration(configurationEnvironmentKey){
   var configurationFilePath;
   var configuration;
+  var defaultConfigurationEnvironmentKey = 'CONFIGURATION_FILE_PATH';
+
+  if(typeof configurationEnvironmentKey === 'undefined'){
+    configurationEnvironmentKey = defaultConfigurationEnvironmentKey;
+  }
 
   if (isNode) {
 
@@ -10,7 +16,7 @@ function determineConfiguration(configurationEnvironmentKey){
       return null;
     }else{
       configurationFilePath = process.env[configurationEnvironmentKey];
-      configuration = require(configurationFilePath);
+      configuration = require('./' + path.relative(__dirname, configurationFilePath));
 
       return configuration;
     }
